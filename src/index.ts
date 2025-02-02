@@ -3,9 +3,9 @@ import axios from "axios";
 import url from 'url';
 import session from "express-session";
 import passport from "passport";
-import sequelize from "./config/database";
+import {AppDataSource} from "./config/database";
 import authRoutes from './routes/AuthRoutes';
-import './config/passport-config';
+import './config/auth';
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -27,9 +27,10 @@ app.get("/", (req, res) => {
 
 
 
-sequelize.sync()
+AppDataSource.initialize()
   .then(() => {
-    console.log("Database connected ✅");
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`)
+    });
   })
   .catch(err => console.error("Database connection failed ❌", err));
